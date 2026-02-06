@@ -301,7 +301,7 @@ body{
 
 
 .navBtn{
-  --navPng: url("./img/home.png");
+  --navPng: url("../img/home.png");
   --navPngSize: 35px;
   border-radius: 2px;
   display: inline-flex;

@@ -351,7 +351,7 @@ body::before{
 .swatch.none{ background: rgba(138, 165, 154, 0.40); }
 
 .navBtn{
-  --navPng: url("./img/matrix.webp");
+  --navPng: url("../img/matrix.webp");
   --navPngSize: 45px;
   border-radius: 2px;
   display: inline-flex;

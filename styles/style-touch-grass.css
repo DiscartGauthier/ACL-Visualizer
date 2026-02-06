@@ -313,7 +313,7 @@ body{
 
 
 .navBtn{
-  --navPng: url("./img/grass.png");
+  --navPng: url("../img/grass.png");
   --navPngSize: 45px;
   border-radius: 2px;
   display: inline-flex;

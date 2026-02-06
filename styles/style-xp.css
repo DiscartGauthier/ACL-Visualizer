@@ -338,7 +338,7 @@ body{
 
 
 .navBtn{
-  --navPng: url("./img/win.png");
+  --navPng: url("../img/win.png");
   --navPngSize: 40px;
   border-radius: 2px;
   display: inline-flex;
