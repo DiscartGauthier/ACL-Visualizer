@@ -16,8 +16,14 @@ const barLabelsEl = document.getElementById('barLabels');
 const helpModal = document.getElementById('helpModal');
 const helpClose = document.getElementById('helpClose');
 
+const scaleToggle = document.getElementById('scaleToggle');
+const barWrap = document.getElementById('barWrap');
+const intervalListWrap = document.getElementById('intervalListWrap');
+const intervalList = document.getElementById('intervalList');
+
 sendBtn.addEventListener('click', () => addRuleFromUI());
 
+scaleToggle.addEventListener('change', () => { renderCoverage(); });
 
 
 
@@ -252,26 +258,63 @@ function moveRule(from, to) {
 function renderCoverage() {
   barEl.innerHTML = '';
   barLabelsEl.innerHTML = '';
+  intervalList.innerHTML = '';
 
   const computed = computeEffectiveIntervals(rules);
-  if (!computed.span) {
-    // show empty bar
-    const seg = document.createElement('div');
-    seg.className = 'seg none';
-    seg.style.height = '100%';
-    barEl.appendChild(seg);
 
-    const lbl = makeLabel(50, 'none', 'No rules');
-    barLabelsEl.appendChild(lbl);
+  // Si rien à montrer
+  if (!computed.span) {
+    // mode bar
+    if (scaleToggle.checked) {
+      barWrap.hidden = false;
+      intervalListWrap.hidden = true;
+
+      const seg = document.createElement('div');
+      seg.className = 'seg none';
+      seg.style.height = '100%';
+      barEl.appendChild(seg);
+
+      barLabelsEl.appendChild(makeLabel(50, 'none', 'Aucune règle'));
+      return;
+    }
+
+    // mode list
+    barWrap.hidden = true;
+    intervalListWrap.hidden = false;
+
+    const li = document.createElement('li');
+    li.className = 'intervalItem none';
+    li.innerHTML = `<span class="intervalBadge">NONE</span><span class="intervalRange">Aucune règle</span>`;
+    intervalList.appendChild(li);
     return;
   }
+
+  // Si Scale OFF => liste lisible (pas de superposition)
+  if (!scaleToggle.checked) {
+    barWrap.hidden = true;
+    intervalListWrap.hidden = false;
+
+    for (const seg of computed.intervals) {
+      const li = document.createElement('li');
+      li.className = `intervalItem ${seg.action}`;
+      li.innerHTML = `
+        <span class="intervalBadge">${seg.action.toUpperCase()}</span>
+        <span class="intervalRange">${intToIp(seg.start)} → ${intToIp(seg.end)}</span>
+      `;
+      intervalList.appendChild(li);
+    }
+    return;
+  }
+
+  // Scale ON => barre
+  barWrap.hidden = false;
+  intervalListWrap.hidden = true;
 
   const { spanStart, spanEnd, intervals } = computed;
   const total = spanEnd - spanStart + 1;
 
   let acc = 0;
 
-  // Start label of first interval
   intervals.forEach((seg, i) => {
     const len = seg.end - seg.start + 1;
     const pct = (len / total) * 100;
@@ -281,19 +324,20 @@ function renderCoverage() {
     div.style.height = `${pct}%`;
     barEl.appendChild(div);
 
-    // label at segment start
+    // label au début du segment
     const topPct = (acc / total) * 100;
     barLabelsEl.appendChild(makeLabel(topPct, seg.action, intToIp(seg.start)));
 
     acc += len;
 
-    // last: add end label
+    // label de fin (dernier segment)
     if (i === intervals.length - 1) {
       const endTop = (acc / total) * 100;
       barLabelsEl.appendChild(makeLabel(endTop, seg.action, intToIp(seg.end)));
     }
   });
 }
+
 
 function computeEffectiveIntervals(rulesArr) {
   const MAX = 0xFFFFFFFF;

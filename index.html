@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACL's Visualizer</title>
-  <link rel="stylesheet" href="./styles/style-touch-grass.css" />
+  <link rel="stylesheet" href="./styles/style-minecraft.css" />
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -65,14 +65,25 @@
     <section class="panel right">
       <div class="panelHeader">
         <h2>Fitting (visualization)</h2>
+        <label class="switch" title="Activer/Désactiver l'échelle">
+          <input id="scaleToggle" type="checkbox" checked />
+          <span class="switchTrack" aria-hidden="true"></span>
+          <span class="switchText">Scale</span>
+        </label>
         <div class="hint">Green = permit · Red = deny · Gray = no match</div>
       </div>
 
       <div class="vizWrap">
-        <div class="barWrap">
+        <div id="barWrap" class="barWrap">
           <div id="bar" class="bar" aria-label="Barre de couverture ACL"></div>
           <div id="barLabels" class="barLabels" aria-hidden="false"></div>
         </div>
+
+        <div id="intervalListWrap" class="intervalListWrap" hidden>
+          <div class="intervalTitle">Effective coverage</div>
+          <ul id="intervalList" class="intervalList"></ul>
+        </div>
+
 
         <div class="legend">
           <div class="legItem"><span class="swatch permit"></span>permit</div>

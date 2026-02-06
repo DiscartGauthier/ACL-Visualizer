@@ -443,3 +443,134 @@ body{
 }
 
 .modalOverlay[hidden]{ display: none; }
+
+
+/* ===== Scale Toggle Switch ===== */
+.switch{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.switch input{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.switchTrack{
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.06);
+  position: relative;
+}
+
+.switchTrack::after{
+  content:"";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.65);
+  transition: transform 150ms ease, background 150ms ease;
+}
+
+.switch input:checked + .switchTrack{
+  background: rgba(31,138,58,0.18);
+  border-color: rgba(31,138,58,0.35);
+}
+
+.switch input:checked + .switchTrack::after{
+  transform: translateX(20px);
+  background: rgba(31,138,58,0.75);
+}
+
+.switchText{
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ===== Interval List (Scale OFF) ===== */
+.intervalListWrap{
+  flex: 1;
+  min-width: 0;
+}
+
+.intervalTitle{
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.intervalList{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.intervalItem{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+}
+
+.intervalItem.permit{ background: var(--permitSoft); }
+.intervalItem.deny{ background: var(--denySoft); }
+.intervalItem.none{ background: var(--noneSoft); }
+
+.intervalBadge{
+  min-width: 74px;
+  text-align: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.intervalItem.permit .intervalBadge{ background: rgba(31,138,58,0.22); }
+.intervalItem.deny .intervalBadge{ background: rgba(181,42,42,0.22); }
+.intervalItem.none .intervalBadge{ background: rgba(107,114,128,0.22); }
+
+.intervalRange{
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barWrap[hidden],
+.intervalListWrap[hidden]{
+  display: none;
+}
+
+.vizWrap{
+  align-items: stretch;
+  min-height: 0;
+}
+
+.intervalListWrap{
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.intervalList{
+  max-height: 100%;
+}
