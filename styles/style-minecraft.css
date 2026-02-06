@@ -1,0 +1,441 @@
+  @font-face {
+    font-family: "Minecraft";
+    src:
+      local("Minecraft Regular"),
+      local("MinecraftRegular-Bmg3"),
+      url("./minecraft-font/MinecraftRegular-Bmg3.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+:root{
+  --bg: #1b2a1b;
+  --panel: #2a3a2a;
+  --panel2: #243224;
+  --text: #e9f2e9;
+  --muted: #c3d2c3;
+  --border: #0c140c;
+
+  --permit: #3bd14f;
+  --deny: #ff5555;
+  --none: #9aa59a;
+
+  --permitSoft: rgba(59, 209, 79, 0.14);
+  --denySoft: rgba(255, 85, 85, 0.14);
+  --noneSoft: rgba(154, 165, 154, 0.10);
+}
+
+*{ box-sizing: border-box; }
+html, body{ height: 100%;
+font-family: "Minecraft"; }
+body{
+  margin: 0;
+  background:
+    linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15)),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 10px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 10px),
+    linear-gradient(180deg, #253b25, var(--bg));
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  image-rendering: pixelated;
+}
+
+
+.topbar{
+  background: linear-gradient(180deg, #3a553a, #2f442f);
+  border-bottom: 4px solid #0f1b0f;
+  padding: 10px 12px;
+  box-shadow: inset 0 3px 0 rgba(255,255,255,0.08);
+}
+
+.row{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.label{
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.select{
+  background: #314631;
+  border: 3px solid #0f1b0f;
+  color: var(--text);
+  border-radius: 0;
+  padding: 8px 10px;
+  outline: none;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.07);
+  font-family: "Minecraft";
+}
+
+.ipgroup{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #314631;
+  border: 3px solid #0f1b0f;
+  border-radius: 0;
+  padding: 6px 8px;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.07);
+}
+
+.dot{
+  color: rgba(233,242,233,0.85);
+  user-select: none;
+}
+
+.octet{
+  width: 3.2em;
+  text-align: center;
+  padding: 8px 6px;
+  border-radius: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  color: var(--text);
+  outline: none;
+  font-family: "Minecraft";
+}
+
+.octet:focus{
+  border-color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.06);
+}
+
+.btn{
+  background: linear-gradient(180deg, #5a7a5a, #3e5a3e);
+  border: 3px solid #0f1b0f;
+  color: var(--text);
+  padding: 9px 14px;
+  border-radius: 0;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.10);
+  font-family: "Minecraft";
+}
+.btn:hover{ filter: brightness(1.06); }
+.btn:active{ transform: translateY(1px); }
+
+.status{
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 13px;
+  min-width: 220px;
+  text-align: right;
+}
+
+.main{
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+}
+
+.panel{
+  background: linear-gradient(180deg, #2a3a2a, #243224);
+  border: 4px solid #0f1b0f;
+  border-radius: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 3px 0 rgba(255,255,255,0.06);
+}
+
+.left{ flex: 1.3; }
+.right{ flex: 1; }
+
+.panelHeader{
+  padding: 12px 14px;
+  border-bottom: 4px solid #0f1b0f;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.panelHeader h2{
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.hint{
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.rulesList{
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+  overflow: auto;
+  min-height: 0;
+}
+
+/* items "pixel" */
+.ruleItem{
+  display: grid;
+  grid-template-columns: 44px 1fr 38px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px;
+  border: 3px solid #0f1b0f;
+  border-radius: 0;
+  margin-bottom: 10px;
+  background: #314631;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.07);
+}
+
+.ruleItem.permit{ background: linear-gradient(90deg, var(--permitSoft), #314631 60%); }
+.ruleItem.deny{ background: linear-gradient(90deg, var(--denySoft), #314631 60%); }
+
+.badge{
+  font-size: 13px;
+  color: var(--text);
+  text-align: center;
+  border-radius: 0;
+  padding: 6px 8px;
+  border: 3px solid #0f1b0f;
+  user-select: none;
+  background: rgba(0,0,0,0.18);
+}
+
+.ruleText{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: grab;
+}
+.ruleText .line1{
+  font-weight: 700;
+  font-size: 13px;
+}
+.ruleText .line2{
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.delBtn{
+  width: 34px;
+  height: 34px;
+  border-radius: 0;
+  border: 3px solid #0f1b0f;
+  background: linear-gradient(180deg, #5a7a5a, #3e5a3e);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.10);
+}
+.delBtn:hover{ filter: brightness(1.06); }
+
+.ruleItem.dragging{
+  opacity: 0.7;
+  outline: 2px dashed rgba(255,255,255,0.30);
+  outline-offset: 3px;
+}
+
+.vizWrap{
+  padding: 14px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  min-height: 0;
+  flex: 1;
+}
+
+.barWrap{
+  position: relative;
+  height: 100%;
+  min-height: 420px;
+  width: 280px;
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.bar{
+  width: 46px;
+  border-radius: 0;
+  border: 4px solid #0f1b0f;
+  overflow: hidden;
+  background: #314631;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.07);
+}
+
+.seg{ width: 100%; }
+.seg.permit{ background: rgba(59, 209, 79, 0.60); }
+.seg.deny{ background: rgba(255, 85, 85, 0.60); }
+.seg.none{ background: rgba(154, 165, 154, 0.40); }
+
+.barLabels{
+  position: absolute;
+  left: 64px;
+  top: 0;
+  bottom: 0;
+  width: 210px;
+  pointer-events: none;
+}
+
+.lbl{
+  position: absolute;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.lbl .pin{
+  width: 8px;
+  height: 8px;
+  border-radius: 0;
+  background: var(--none);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.25);
+}
+
+.lbl.permit .pin{ background: var(--permit); }
+.lbl.deny .pin{ background: var(--deny); }
+.lbl.none .pin{ background: var(--none); }
+
+.legend{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 6px;
+}
+.legItem{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.swatch{
+  width: 14px;
+  height: 14px;
+  border-radius: 0;
+  border: 3px solid #0f1b0f;
+}
+.swatch.permit{ background: rgba(59, 209, 79, 0.60); }
+.swatch.deny{ background: rgba(255, 85, 85, 0.60); }
+.swatch.none{ background: rgba(154, 165, 154, 0.40); }
+
+
+.navBtn{
+  --navPng: url("./img/minecraft.webp");
+  --navPngSize: 40px;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.navBtn::before{
+  content: "";
+  display: block;
+  width: var(--navPngSize);
+  height: var(--navPngSize);
+  background-image: var(--navPng);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.navIcon{
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+/* ===== HELP MODAL (Minecraft) ===== */
+.modalOverlay{
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0,0,0,0.65);
+}
+
+.modal{
+  width: min(560px, 92vw);
+  background: #314631;
+  border: 4px solid #0f1b0f;
+  border-radius: 0;
+  box-shadow: 0 22px 80px rgba(0,0,0,0.55);
+  overflow: hidden;
+}
+
+.modalHeader{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 4px solid #0f1b0f;
+  background: linear-gradient(180deg, #5a7a5a, #3e5a3e);
+}
+
+.modalHeader h3{
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.modalClose{
+  width: 34px;
+  height: 34px;
+  border-radius: 0;
+  border: 3px solid #0f1b0f;
+  background: linear-gradient(180deg, #5a7a5a, #3e5a3e);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.modalBody{ padding: 12px 14px; }
+.modalIntro{ margin: 0 0 10px; color: var(--muted); font-size: 13px; }
+
+.helpList{ margin: 0; padding-left: 18px; color: var(--text); font-size: 13px; }
+.helpList li{ margin: 7px 0; line-height: 1.5; }
+
+.kbd{
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 0;
+  border: 3px solid #0f1b0f;
+  background: rgba(0,0,0,0.18);
+  font-family: "Minecraft";
+  font-size: 13px;
+}
+
+.modalTip{
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 0;
+  border: 3px solid #0f1b0f;
+  background: rgba(0,0,0,0.15);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.modalOverlay[hidden]{ display: none; }

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACL's Visualizer</title>
+  <link rel="stylesheet" href="./styles/style-touch-grass.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <!-- The Top Part -->
+  <header class="topbar">
+    <div class="row">
+        <a class="navBtn" href="./test.html" title="Aller à test.html" aria-label="Aller à test.html">
+            <svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true">
+            </svg>
+        </a>
+
+      <label class="label">Action</label>
+      <select id="actionSelect" class="select">
+        <option value="permit">permit</option>
+        <option value="deny">deny</option>
+      </select>
+
+      <label class="label">IP</label>
+      <div class="ipgroup" id="ipGroup" aria-label="Adresse IP">
+        <input class="octet" inputmode="numeric" maxlength="3" placeholder="0" />
+        <span class="dot">.</span>
+        <input class="octet" inputmode="numeric" maxlength="3" placeholder="0" />
+        <span class="dot">.</span>
+        <input class="octet" inputmode="numeric" maxlength="3" placeholder="0" />
+        <span class="dot">.</span>
+        <input class="octet" inputmode="numeric" maxlength="3" placeholder="0" />
+      </div>
+
+      <label class="label">Wildmask</label>
+      <div class="ipgroup" id="wmGroup" aria-label="Wildmask">
+        <input class="octet" inputmode="numeric" maxlength="3" placeholder="0" />
+        <span class="dot">.</span>
+        <input class="octet" inputmode="numeric" maxlength="3" placeholder="0" />
+        <span class="dot">.</span>
+        <input class="octet" inputmode="numeric" maxlength="3" placeholder="0" />
+        <span class="dot">.</span>
+        <input class="octet" inputmode="numeric" maxlength="3" placeholder="0" />
+      </div>
+
+      <button id="sendBtn" class="btn">Send</button>
+
+      <div id="status" class="status" aria-live="polite"></div>
+    </div>
+  </header>
+  <!-- END TOP -->
+
+  <main class="main">
+    <!-- LEFT Part -->
+    <section class="panel left">
+      <div class="panelHeader">
+        <h2>ACE's</h2>
+        <div class="hint">Drag & drop to order</div>
+      </div>
+      <ol id="rulesList" class="rulesList"></ol>
+    </section>
+
+    <!-- Right Part -->
+    <section class="panel right">
+      <div class="panelHeader">
+        <h2>Fitting (visualization)</h2>
+        <div class="hint">Green = permit · Red = deny · Gray = no match</div>
+      </div>
+
+      <div class="vizWrap">
+        <div class="barWrap">
+          <div id="bar" class="bar" aria-label="Barre de couverture ACL"></div>
+          <div id="barLabels" class="barLabels" aria-hidden="false"></div>
+        </div>
+
+        <div class="legend">
+          <div class="legItem"><span class="swatch permit"></span>permit</div>
+          <div class="legItem"><span class="swatch deny"></span>deny</div>
+          <div class="legItem"><span class="swatch none"></span>none</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <div id="helpModal" class="modalOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modalHeader">
+      <h3 id="helpTitle">Helps — Shortcuts</h3>
+      <button id="helpClose" class="modalClose" type="button" aria-label="Fermer">×</button>
+    </div>
+
+    <div class="modalBody">
+      <p class="modalIntro">
+        A quick reminder of the available Hotkeys and actions :
+      </p>
+
+      <ul class="helpList">
+        <li><span class="kbd">Tab</span> : move to the next byte/field</li>
+        <li><span class="kbd">Backspace</span> : return to the previous byte (if the current byte is empty)</li>
+        <li><span class="kbd">.</span> : move to the next byte</li>
+        <li><span class="kbd">Enter</span> : send (like the button <span class="kbd">Send</span>)</li>
+        <li><span class="kbd">-</span> : toggle <span class="kbd">permit</span> / <span class="kbd">deny</span></li>
+        <li><span class="kbd">H</span> : Open Help Menu</li>
+        <li><span class="kbd">Drag &amp; Drop</span> : Slide a rule to change the order</li>
+        <li><span class="kbd">×</span> : delete a rule</li>
+      </ul>
+
+      <div class="modalTip">
+        Tip: After sending, the focus automatically returns to the IP address.
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
