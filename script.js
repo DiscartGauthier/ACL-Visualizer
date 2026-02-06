@@ -159,12 +159,19 @@ function addRuleFromUI() {
 }
 
 function readOctets(inputs) {
-  const parts = inputs.map(i => i.value.trim());
-  if (parts.some(p => p === '')) return null;
-  const nums = parts.map(p => Number(p));
+  const nums = inputs.map((i) => {
+    const v = i.value.trim();
+    if (v === '') {
+      i.value = '0';
+      return 0;
+    }
+    return Number(v);
+  });
+
   if (nums.some(n => !Number.isInteger(n) || n < 0 || n > 255)) return null;
   return nums;
 }
+
 
 function clearOctets(inputs) {
   inputs.forEach(i => i.value = '');
