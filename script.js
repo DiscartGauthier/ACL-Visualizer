@@ -141,17 +141,22 @@ function addRuleFromUI() {
   const ipInt = ipToInt(ipParts);
   const wmInt = ipToInt(wmParts);
 
-  //~inverse les bits 
-  //Start = AND Gate between IP and ~Wildcard
-  //End = OR Gate between IP and Wildcard
-  const start = (ipInt & (~wmInt)) >>> 0;
-  const end = (ipInt | wmInt) >>> 0;
+  const ranges = wildcardToRanges(ipInt, wmInt);
 
-  rules.push({ action, ipInt, wmInt, start, end });
+  // on garde start/end seulement pour affichage rapide (min/max),
+  // MAIS la vérité c'est ranges[]
+  const start = ranges[0].start;
+  const end = ranges[ranges.length - 1].end;
 
-  setStatus(`Add: ${action.toUpperCase()} ${intToIp(ipInt)} ${intToIp(wmInt)} (range ${intToIp(start)} → ${intToIp(end)})`);
+  rules.push({ action, ipInt, wmInt, ranges, start, end });
 
-  // clear IP inputs but keep wildmask
+  const pretty = (ranges.length <= 8)
+    ? ranges.map(r => (r.start === r.end ? intToIp(r.start) : `${intToIp(r.start)}→${intToIp(r.end)}`)).join(', ')
+    : `${intToIp(start)} … ${intToIp(end)} (${ranges.length} blocs)`;
+
+  setStatus(`Add: ${action.toUpperCase()} ${intToIp(ipInt)} ${intToIp(wmInt)} | matches: ${pretty}`);
+
+
   clearOctets(ipInputs);
   ipInputs[0].focus();
 
@@ -353,36 +358,31 @@ function computeEffectiveIntervals(rulesArr) {
 
   // Apply each rule to "none" parts only (first match wins)
   for (const r of rulesArr) {
-    const rs = r.start >>> 0;
-    const re = r.end >>> 0;
+    const parts = (r.ranges && r.ranges.length) ? r.ranges : [{ start: r.start, end: r.end }];
 
-    const next = [];
+    for (const part of parts) {
+      const rs = part.start >>> 0;
+      const re = part.end >>> 0;
 
-    for (const seg of intervals) {
-      if (seg.action !== 'none') {
-        next.push(seg);
-        continue;
+      const next = [];
+
+      for (const seg of intervals) {
+        if (seg.action !== 'none') { next.push(seg); continue; }
+        if (re < seg.start || rs > seg.end) { next.push(seg); continue; }
+
+        const a = seg.start, b = seg.end;
+        const is = Math.max(a, rs);
+        const ie = Math.min(b, re);
+
+        if (a < is) next.push({ start: a, end: is - 1, action: 'none' });
+        next.push({ start: is, end: ie, action: r.action });
+        if (ie < b) next.push({ start: ie + 1, end: b, action: 'none' });
       }
 
-      // no overlap
-      if (re < seg.start || rs > seg.end) {
-        next.push(seg);
-        continue;
-      }
-
-      // overlap => split
-      const a = seg.start;
-      const b = seg.end;
-      const is = Math.max(a, rs);
-      const ie = Math.min(b, re);
-
-      if (a < is) next.push({ start: a, end: is - 1, action: 'none' });
-      next.push({ start: is, end: ie, action: r.action });
-      if (ie < b) next.push({ start: ie + 1, end: b, action: 'none' });
+      intervals = next;
     }
-
-    intervals = next;
   }
+
 
   const touched = intervals.filter(x => x.action !== 'none');
   if (touched.length === 0) return { span: null };
@@ -455,6 +455,52 @@ function escapeHtml(s) {
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
 }
+
+function highestSetBit(x) {
+  x >>>= 0;
+  return (1 << (31 - Math.clz32(x))) >>> 0;
+}
+
+function mergeRanges(ranges) {
+  ranges.sort((a, b) => a.start - b.start);
+  const out = [];
+  for (const r of ranges) {
+    const last = out[out.length - 1];
+    if (last && (last.end + 1) === r.start) last.end = r.end;
+    else out.push({ start: r.start >>> 0, end: r.end >>> 0 });
+  }
+  return out;
+}
+
+function wildcardToRanges(ipInt, wmInt) {
+  ipInt >>>= 0; wmInt >>>= 0;
+
+  const base = (ipInt & (~wmInt)) >>> 0;
+
+  function rec(curBase, mask) {
+    mask >>>= 0;
+
+    if (mask === 0) return [{ start: curBase >>> 0, end: curBase >>> 0 }];
+
+    if ((mask & (mask + 1)) === 0) {
+      return [{ start: curBase >>> 0, end: (curBase + mask) >>> 0 }];
+    }
+
+    const bit = highestSetBit(mask);
+    const rest = (mask & (~bit)) >>> 0;
+
+    return [
+      ...rec(curBase >>> 0, rest),
+      ...rec((curBase | bit) >>> 0, rest),
+    ];
+  }
+
+  return mergeRanges(rec(base, wmInt));
+}
+
+
+
+
 
 //For Modal 
 function openHelpModal() {
