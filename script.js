@@ -21,6 +21,13 @@ const barWrap = document.getElementById('barWrap');
 const intervalListWrap = document.getElementById('intervalListWrap');
 const intervalList = document.getElementById('intervalList');
 
+const themeLink = document.getElementById('themeStylesheet');
+const themeModal = document.getElementById('themeModal');
+const themeCards = [...themeModal.querySelectorAll('.themeCard')];
+
+const THEME_KEY = 'acl_theme';
+
+
 sendBtn.addEventListener('click', () => addRuleFromUI());
 
 scaleToggle.addEventListener('change', () => { renderCoverage(); });
@@ -35,6 +42,22 @@ helpModal.addEventListener('click', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
+    if (e.key === 't' || e.key === 'T') {
+    e.preventDefault();
+    if (!helpModal.hidden) closeHelpModal();
+    if (themeModal.hidden) openThemeModal();
+    else closeThemeModal();
+    return;
+  }
+
+  if (!themeModal.hidden) {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeThemeModal();
+    }
+    return;
+  }
+
   if (e.key === 'h' || e.key === 'H') {
     e.preventDefault();
     if (helpModal.hidden) openHelpModal();
@@ -56,6 +79,19 @@ document.addEventListener('keydown', (e) => {
     toggleActionMode();
   }
 });
+
+themeCards.forEach(btn => {
+  btn.addEventListener('click', () => {
+    applyThemeById(btn.dataset.theme);
+    closeThemeModal();
+  });
+});
+
+themeModal.addEventListener('click', (e) => {
+  if (e.target === themeModal) closeThemeModal();
+});
+
+
 
 
 // All Rapid Action on the input
@@ -181,6 +217,11 @@ function readOctets(inputs) {
 function clearOctets(inputs) {
   inputs.forEach(i => i.value = '');
 }
+
+// Theme init (default = base)
+const savedTheme = localStorage.getItem(THEME_KEY);
+if (savedTheme) applyThemeById(savedTheme);
+else setActiveTheme('base');
 
 
 
@@ -523,5 +564,34 @@ openHelpModal();
 renderAll();
 setStatus("Ready. Add an ACE (Enter or Send).");
 ipInputs[0].focus();
+
+
+
+
+
+function openThemeModal() {
+  themeModal.hidden = false;
+  const active = themeModal.querySelector('.themeCard.active') || themeCards[0];
+  active?.focus();
+}
+
+function closeThemeModal() {
+  themeModal.hidden = true;
+  ipInputs[0].focus();
+}
+
+function setActiveTheme(themeId) {
+  themeCards.forEach(b => b.classList.toggle('active', b.dataset.theme === themeId));
+}
+
+function applyThemeById(themeId) {
+  const btn = themeCards.find(b => b.dataset.theme === themeId);
+  if (!btn) return;
+
+  themeLink.href = btn.dataset.href;
+  localStorage.setItem(THEME_KEY, themeId);
+  setActiveTheme(themeId);
+  setStatus(`Theme: ${themeId}`);
+}
 
 

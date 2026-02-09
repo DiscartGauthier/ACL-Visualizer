@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACL's Visualizer</title>
-  <link rel="stylesheet" href="./styles/style-xp.css" />
+  <link id="themeStylesheet" rel="stylesheet" href="./styles/style.css">
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -94,36 +94,75 @@
     </section>
   </main>
 
-
+<!-- Modal for helpers -->
   <div id="helpModal" class="modalOverlay" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
-    <div class="modalHeader">
-      <h3 id="helpTitle">Helps — Shortcuts</h3>
-      <button id="helpClose" class="modalClose" type="button" aria-label="Fermer">×</button>
-    </div>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <div class="modalHeader">
+        <h3 id="helpTitle">Helps — Shortcuts</h3>
+        <button id="helpClose" class="modalClose" type="button" aria-label="Fermer">×</button>
+      </div>
 
-    <div class="modalBody">
-      <p class="modalIntro">
-        A quick reminder of the available Hotkeys and actions :
-      </p>
+      <div class="modalBody">
+        <p class="modalIntro">
+          A quick reminder of the available Hotkeys and actions :
+        </p>
 
-      <ul class="helpList">
-        <li><span class="kbd">Tab</span> : move to the next byte/field</li>
-        <li><span class="kbd">Backspace</span> : return to the previous byte (if the current byte is empty)</li>
-        <li><span class="kbd">.</span> : move to the next byte</li>
-        <li><span class="kbd">Enter</span> : send (like the button <span class="kbd">Send</span>)</li>
-        <li><span class="kbd">-</span> : toggle <span class="kbd">permit</span> / <span class="kbd">deny</span></li>
-        <li><span class="kbd">H</span> : Open Help Menu</li>
-        <li><span class="kbd">Drag &amp; Drop</span> : Slide a rule to change the order</li>
-        <li><span class="kbd">×</span> : delete a rule</li>
-      </ul>
+        <ul class="helpList">
+          <li><span class="kbd">Tab</span> : move to the next byte/field</li>
+          <li><span class="kbd">Backspace</span> : return to the previous byte (if the current byte is empty)</li>
+          <li><span class="kbd">.</span> : move to the next byte</li>
+          <li><span class="kbd">Enter</span> : send (like the button <span class="kbd">Send</span>)</li>
+          <li><span class="kbd">-</span> : toggle <span class="kbd">permit</span> / <span class="kbd">deny</span></li>
+          <li><span class="kbd">H</span> : Open Help Menu</li>
+          <li><span class="kbd">Drag &amp; Drop</span> : Slide a rule to change the order</li>
+          <li><span class="kbd">×</span> : delete a rule</li>
+        </ul>
 
-      <div class="modalTip">
-        Tip: After sending, the focus automatically returns to the IP address.
+        <div class="modalTip">
+          Tip: After sending, the focus automatically returns to the IP address.
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal for Thème -->
+   <div id="themeModal" class="themeOverlay" hidden>
+  <div class="themeModal" role="dialog" aria-modal="true" aria-labelledby="themeTitle">
+    <div class="themeHeader">
+      <h3 id="themeTitle">Themes</h3>
+      <div class="themeHint">T = ouvrir/fermer · Esc = fermer</div>
+    </div>
+
+    <div class="themeGrid">
+      <button class="themeCard" type="button" data-theme="base" data-href="./styles/style.css">
+        <div class="themeName">Base</div>
+        <div class="themeDesc">style.css</div>
+      </button>
+
+      <button class="themeCard" type="button" data-theme="xp" data-href="./styles/style-xp.css">
+        <div class="themeName">Windows XP</div>
+        <div class="themeDesc">style-xp.css</div>
+      </button>
+
+      <button class="themeCard" type="button" data-theme="matrix" data-href="./styles/style-matrix.css">
+        <div class="themeName">Matrix</div>
+        <div class="themeDesc">style-matrix.css</div>
+      </button>
+
+      <button class="themeCard" type="button" data-theme="minecraft" data-href="./styles/style-minecraft.css">
+        <div class="themeName">Minecraft</div>
+        <div class="themeDesc">style-minecraft.css</div>
+      </button>
+
+      <button class="themeCard" type="button" data-theme="touch" data-href="./styles/style-touch-grass.css">
+        <div class="themeName">Touch grass</div>
+        <div class="themeDesc">style-touch-grass.css</div>
+      </button>
+    </div>
+  </div>
 </div>
+
+
 
 </body>
 </html>
